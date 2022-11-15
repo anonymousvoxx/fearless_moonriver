@@ -2,7 +2,7 @@ import { ProcessorConfig } from './types/custom/processorConfig'
 
 const config: ProcessorConfig = {
     chainName: 'moonriver',
-    prefix: '',
+    prefix: 'moonriver',
     dataSource: {
         archive: 'https://moonriver.archive.subsquid.io/graphql',
         chain: 'wss://wss.api.moonriver.moonbeam.network',
