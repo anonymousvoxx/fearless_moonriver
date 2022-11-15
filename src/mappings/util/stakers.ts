@@ -50,20 +50,6 @@ export async function getCollatorsData(
         })
     }
 
-    const collatorState = await storage.parachainStaking.old.getCollatorState(ctx, accounts)
-    if (collatorState) {
-        return collatorState.map((d) => {
-            if (!d) return undefined
-
-            const nominators = d.topNominators.concat(d.bottomNominators)
-
-            return {
-                id: d.id,
-                bond: d.bond,
-                nominators,
-            }
-        })
-    }
 
     return undefined
 }
@@ -82,10 +68,6 @@ export async function getNominatorsData(
         return delegatorState
     }
 
-    const nominatorState = await storage.parachainStaking.old.getNominatorState(ctx, accounts)
-    if (nominatorState) {
-        return nominatorState
-    }
 
     return undefined
 }
