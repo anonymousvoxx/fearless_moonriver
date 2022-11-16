@@ -20,8 +20,8 @@ export interface EventData {
 function getEventData(ctx: EventContext): EventData {
     const event = new ParachainStakingNewRoundEvent(ctx)
 
-    if (event.isV900) {
-        const [startingBlock, round, selectedCollatorsNumber, totalBalance] = event.asV900
+    if (event.isV49) {
+        const [startingBlock, round, selectedCollatorsNumber, totalBalance] = event.asV49
         return { startingBlock, round, selectedCollatorsNumber, totalBalance }
     } else if (event.isV1300) {
         return event.asV1300

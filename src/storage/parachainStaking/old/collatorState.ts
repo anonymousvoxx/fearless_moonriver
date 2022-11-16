@@ -1,7 +1,7 @@
 import { UnknownVersionError } from '../../../common/errors'
 import { decodeId, encodeId } from '../../../common/tools'
 import { ParachainStakingCollatorState2Storage } from '../../../types/generated/storage'
-import { StorageContext } from '../../../types/generated/support'
+import { BlockContext } from '../../../types/generated/support'
 
 interface StorageData {
     bond: bigint
@@ -16,7 +16,7 @@ interface StorageData {
 }
 
 async function getStorageData(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: Uint8Array[]
 ): Promise<(StorageData | undefined)[] | undefined> {
     const storage = new ParachainStakingCollatorState2Storage(ctx)
@@ -43,7 +43,7 @@ interface CollatorState {
 }
 
 async function queryStorageFunction(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(CollatorState | undefined)[] | undefined> {
     if (accounts.length === 0) return []
@@ -71,12 +71,12 @@ async function queryStorageFunction(
     )
 }
 
-export async function getCollatorState(ctx: StorageContext, account: string): Promise<CollatorState | undefined>
+export async function getCollatorState(ctx: BlockContext, account: string): Promise<CollatorState | undefined>
 export async function getCollatorState(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(CollatorState | undefined)[] | undefined>
-export async function getCollatorState(ctx: StorageContext, accountOrAccounts: string | string[]) {
+export async function getCollatorState(ctx: BlockContext, accountOrAccounts: string | string[]) {
     if (Array.isArray(accountOrAccounts)) {
         return await queryStorageFunction(ctx, accountOrAccounts)
     } else {

@@ -1,5 +1,5 @@
 import storage from '../../storage'
-import { StorageContext } from '../../types/generated/support'
+import { BlockContext } from '../../types/generated/support'
 
 interface CollatorData {
     id: string
@@ -12,7 +12,7 @@ interface CollatorData {
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export async function getCollatorsData(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(CollatorData | undefined)[] | undefined> {
     const candidateInfo = await storage.parachainStaking.getCandidateInfo(ctx, accounts)
@@ -50,6 +50,20 @@ export async function getCollatorsData(
         })
     }
 
+    const collatorState = await storage.parachainStaking.old.getCollatorState(ctx, accounts)
+    if (collatorState) {
+        return collatorState.map((d) => {
+            if (!d) return undefined
+
+            const nominators = d.topNominators.concat(d.bottomNominators)
+
+            return {
+                id: d.id,
+                bond: d.bond,
+                nominators,
+            }
+        })
+    }
 
     return undefined
 }
@@ -60,7 +74,7 @@ interface NominatorData {
 }
 
 export async function getNominatorsData(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(NominatorData | undefined)[] | undefined> {
     const delegatorState = await storage.parachainStaking.getDelegatorState(ctx, accounts)
@@ -68,6 +82,10 @@ export async function getNominatorsData(
         return delegatorState
     }
 
+    const nominatorState = await storage.parachainStaking.old.getNominatorState(ctx, accounts)
+    if (nominatorState) {
+        return nominatorState
+    }
 
     return undefined
 }

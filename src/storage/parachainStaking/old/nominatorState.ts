@@ -1,7 +1,7 @@
 import { UnknownVersionError } from '../../../common/errors'
 import { decodeId, encodeId } from '../../../common/tools'
 import { ParachainStakingNominatorState2Storage } from '../../../types/generated/storage'
-import { StorageContext } from '../../../types/generated/support'
+import { BlockContext } from '../../../types/generated/support'
 
 interface StorageData {
     nominations: {
@@ -12,7 +12,7 @@ interface StorageData {
 }
 
 async function getStorageData(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: Uint8Array[]
 ): Promise<(StorageData | undefined)[] | undefined> {
     const storage = new ParachainStakingNominatorState2Storage(ctx)
@@ -35,7 +35,7 @@ interface NominatorState {
 }
 
 async function queryStorageFunction(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(NominatorState | undefined)[] | undefined> {
     if (accounts.length === 0) return []
@@ -59,12 +59,12 @@ async function queryStorageFunction(
     )
 }
 
-export async function getNominatorState(ctx: StorageContext, account: string): Promise<NominatorState | undefined>
+export async function getNominatorState(ctx: BlockContext, account: string): Promise<NominatorState | undefined>
 export async function getNominatorState(
-    ctx: StorageContext,
+    ctx: BlockContext,
     accounts: string[]
 ): Promise<(NominatorState | undefined)[] | undefined>
-export async function getNominatorState(ctx: StorageContext, accountOrAccounts: string | string[]) {
+export async function getNominatorState(ctx: BlockContext, accountOrAccounts: string | string[]) {
     if (Array.isArray(accountOrAccounts)) {
         return await queryStorageFunction(ctx, accountOrAccounts)
     } else {
