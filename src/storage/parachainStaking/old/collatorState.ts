@@ -24,6 +24,8 @@ async function getStorageData(
 
     if (storage.isV900) {
         return await storage.getManyAsV900(accounts)
+    } else if (storage.isV53) {
+        return await storage.getManyAsV53(accounts)
     } else {
         throw new UnknownVersionError(storage.constructor.name)
     }
