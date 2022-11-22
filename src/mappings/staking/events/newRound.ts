@@ -116,15 +116,15 @@ export async function handleNewRound(ctx: EventHandlerContext) {
     for (let i = 0; i < delegationsData.length; i++) {
         const collator = collators.get(delegationsData[i].collatorId)
         const nominator = nominators.get(delegationsData[i].nominatorId)
-        assert(collator != null && nominator != null)
-
-        delegations[i] = new RoundNomination({
-            id: `${round.index}-${collator.staker.id}-${nominator.staker.id}`,
-            round,
-            collator,
-            nominator,
-            amount: delegationsData[i].vote,
-        })
+        if (collator != null && nominator != null) {
+            delegations[i] = new RoundNomination({
+                id: `${round.index}-${collator.staker.id}-${nominator.staker.id}`,
+                round,
+                collator,
+                nominator,
+                amount: delegationsData[i].vote,
+            })
+        }
     }
 
     await ctx.store.save(delegations)
