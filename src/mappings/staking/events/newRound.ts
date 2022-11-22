@@ -69,7 +69,6 @@ export async function handleNewRound(ctx: EventHandlerContext) {
         }
 
         const staker = collatorStakers.get(collatorData.id)
-        assert(staker != null)
 
         collators.set(
             collatorData.id,
