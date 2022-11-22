@@ -92,9 +92,8 @@ export async function handleNewRound(ctx: EventHandlerContext) {
 
     for (const nominatorId of nominatorIds) {
         const staker = nominatorStakers.get(nominatorId)
-        assert(staker != null)
-
-        nominators.set(
+        if (staker) {
+            nominators.set(
             nominatorId,
             new RoundNominator({
                 id: `${round.index}-${nominatorId}`,
@@ -107,6 +106,7 @@ export async function handleNewRound(ctx: EventHandlerContext) {
                 ),
             })
         )
+        }
     }
 
     await ctx.store.save([...nominators.values()])
