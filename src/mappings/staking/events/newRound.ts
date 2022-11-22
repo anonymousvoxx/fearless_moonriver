@@ -69,6 +69,7 @@ export async function handleNewRound(ctx: EventHandlerContext) {
         }
 
         const staker = collatorStakers.get(collatorData.id)
+        const collatorObj = await ctx.store.get<Collator>(Collator, { where: { id: collatorData.id } })
 
         collators.set(
             collatorData.id,
@@ -80,6 +81,7 @@ export async function handleNewRound(ctx: EventHandlerContext) {
                 totalBond: totalBond,
                 rewardAmount: DefaultCollatorCommission,
                 nominatorsCount: collatorData.nominators.length,
+                collator: collatorObj,
             })
         )
     }
