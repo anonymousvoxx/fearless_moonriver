@@ -7,49 +7,49 @@ import {Collator} from "./collator.model"
 
 @Entity_()
 export class RoundCollator {
-  constructor(props?: Partial<RoundCollator>) {
-    Object.assign(this, props)
-  }
+    constructor(props?: Partial<RoundCollator>) {
+        Object.assign(this, props)
+    }
 
-  @PrimaryColumn_()
-  id!: string
+    @PrimaryColumn_()
+    id!: string
 
-  @Index_()
-  @ManyToOne_(() => Round, {nullable: false})
-  round!: Round
+    @Index_()
+    @ManyToOne_(() => Round, {nullable: true})
+    round!: Round
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
-  ownBond!: bigint | undefined | null
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: true})
+    ownBond!: bigint | undefined | null
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  totalBond!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    totalBond!: bigint
 
-  @Column_("numeric", {nullable: true})
-  rewardAmount!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    rewardAmount!: number | undefined | null
 
-  @Column_("numeric", {nullable: true})
-  apr!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    apr!: number | undefined | null
 
-  @Column_("numeric", {nullable: true})
-  aprTechnNumerator!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    aprTechnNumerator!: number | undefined | null
 
-  @Column_("numeric", {nullable: true})
-  aprTechnDenominator!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    aprTechnDenominator!: number | undefined | null
 
-  @OneToMany_(() => RoundNomination, e => e.collator)
-  nominators!: RoundNomination[]
+    @OneToMany_(() => RoundNomination, e => e.collator)
+    nominators!: RoundNomination[]
 
-  @Column_("int4", {nullable: false})
-  nominatorsCount!: number
+    @Column_("int4", {nullable: false})
+    nominatorsCount!: number
 
-  @Column_("text", {nullable: false})
-  stakerId!: string
+    @Column_("text", {nullable: false})
+    stakerId!: string
 
-  @Index_()
-  @ManyToOne_(() => Staker, {nullable: false})
-  staker!: Staker
+    @Index_()
+    @ManyToOne_(() => Staker, {nullable: true})
+    staker!: Staker
 
-  @Index_()
-  @ManyToOne_(() => Collator, {nullable: true})
-  collator!: Collator | undefined | null
+    @Index_()
+    @ManyToOne_(() => Collator, {nullable: true})
+    collator!: Collator | undefined | null
 }

@@ -6,7 +6,7 @@ import { Round, RoundCollator, RoundNomination, RoundNominator, Collator,
 import assert from 'assert'
 import storage from '../../../storage'
 import { getCollatorsData } from '../../util/stakers'
-import { getOrCreateStakers } from '../../util/entities'
+import { getOrCreateStakers, getOrCreateStaker } from '../../util/entities'
 import { DefaultCollatorCommission } from '../../util/consts'
 import { createPrevStorageContext } from '../../util/actions'
 
@@ -54,6 +54,8 @@ export async function handleNewRound(ctx: EventHandlerContext) {
 
     const collators = new Map<string, RoundCollator>()
     const collatorStakers = new Map((await getOrCreateStakers(ctx, collatorIds)).map((s) => [s.id, s]))
+    ctx.log.info("collatorStakers")
+    ctx.log.info(collatorStakers)
 
     const nominatorIds = new Array<string>()
     const delegationsData = new Array<{ vote: bigint; nominatorId: string; collatorId: string }>()
@@ -67,21 +69,21 @@ export async function handleNewRound(ctx: EventHandlerContext) {
             nominatorIds.push(nomination.id)
             delegationsData.push({ vote: nomination.amount, nominatorId: nomination.id, collatorId: collatorData.id })
         }
-
-        const staker = collatorStakers.get(collatorData.id)
-
-        collators.set(
-            collatorData.id,
-            new RoundCollator({
-                id: `${round.index}-${collatorData.id}`,
-                round,
-                staker,
-                ownBond: collatorData.bond,
-                totalBond: totalBond,
-                rewardAmount: DefaultCollatorCommission,
-                nominatorsCount: collatorData.nominators.length,
-            })
-        )
+        const new_collator = await getOrCreateStaker(ctx,collatorData.id)
+        if (new_collator) {
+                collators.set(
+                    collatorData.id,
+                    new RoundCollator({
+                        id: `${round.index}-${collatorData.id}`,
+                        round,
+                        staker: new_collator,
+                        ownBond: collatorData.bond,
+                        totalBond: totalBond,
+                        rewardAmount: DefaultCollatorCommission,
+                        //nominatorsCount: collatorData.nominators.length,
+                    })
+                )
+        }
     }
 
     await ctx.store.save([...collators.values()])

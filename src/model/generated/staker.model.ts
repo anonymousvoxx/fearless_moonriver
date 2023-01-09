@@ -7,42 +7,42 @@ import {Reward} from "./reward.model"
 
 @Entity_()
 export class Staker {
-  constructor(props?: Partial<Staker>) {
-    Object.assign(this, props)
-  }
+    constructor(props?: Partial<Staker>) {
+        Object.assign(this, props)
+    }
 
-  @PrimaryColumn_()
-  id!: string
+    @PrimaryColumn_()
+    id!: string
 
-  @Column_("text", {nullable: false})
-  stashId!: string
+    @Column_("text", {nullable: false})
+    stashId!: string
 
-  @Index_({unique: true})
-  @OneToOne_(() => Account, {nullable: false})
-  @JoinColumn_()
-  stash!: Account
+    @Index_({unique: true})
+    @OneToOne_(() => Account, {nullable: false})
+    @JoinColumn_()
+    stash!: Account
 
-  @Column_("text", {nullable: true})
-  role!: string | undefined | null
+    @Column_("text", {nullable: true})
+    role!: string | undefined | null
 
-  @Column_("numeric", {nullable: true})
-  commission!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    commission!: number | undefined | null
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  activeBond!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    activeBond!: bigint
 
-  @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
-  totalReward!: bigint
+    @Column_("numeric", {transformer: marshal.bigintTransformer, nullable: false})
+    totalReward!: bigint
 
-  @Column_("numeric", {nullable: true})
-  apr24h!: number | undefined | null
+    @Column_("numeric", {transformer: marshal.floatTransformer, nullable: true})
+    apr24h!: number | undefined | null
 
-  @OneToMany_(() => RoundCollator, e => e.staker)
-  collatorHistory!: RoundCollator[]
+    @OneToMany_(() => RoundCollator, e => e.staker)
+    collatorHistory!: RoundCollator[]
 
-  @OneToMany_(() => RoundNominator, e => e.staker)
-  nominatorHistory!: RoundNominator[]
+    @OneToMany_(() => RoundNominator, e => e.staker)
+    nominatorHistory!: RoundNominator[]
 
-  @OneToMany_(() => Reward, e => e.staker)
-  rewards!: Reward[]
+    @OneToMany_(() => Reward, e => e.staker)
+    rewards!: Reward[]
 }
